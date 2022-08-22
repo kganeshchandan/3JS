@@ -62,12 +62,12 @@ export function AddLight() {
     return [light, light2, light3];
 }
 
-export function TranslatePattern(SelectAtomList) {
+export function TranslatePattern(SelectAtomList, translateVec) {
     var newAtoms = [];
     for (let i = 0; i < SelectAtomList.length; i++) {
         var curAtom = SelectAtomList[i];
         var newpos = curAtom.position.clone();
-        var translateVec = new THREE.Vector3(1, 1, 1);
+        // var translateVec = new THREE.Vector3(1, 1, 1);
         newpos.add(translateVec);
         var sphereMesh = new THREE.Mesh(
             new THREE.SphereGeometry(1, 20, 20),
@@ -81,4 +81,18 @@ export function TranslatePattern(SelectAtomList) {
         newAtoms.push(sphereMesh);
     }
     return newAtoms;
+}
+
+export function updateButtonCSS(action) {
+    if (action == "addAtom") {
+        document.getElementById("AddAtom").style =
+            "background-color: rgba(0,255,255,0.75); color: #000000 ";
+        document.getElementById("SelectAtom").style =
+            "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
+    } else if (action == "selectAtom") {
+        document.getElementById("SelectAtom").style =
+            "background-color: rgba(0,255,255,0.75); color: #000000 ";
+        document.getElementById("AddAtom").style =
+            "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
+    }
 }

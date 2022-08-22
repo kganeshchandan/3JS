@@ -6,6 +6,7 @@ import {
     CheckHover,
     DeleteObject,
     TranslatePattern,
+    updateButtonCSS,
 } from "./utils.js";
 
 // import { RectAreaLightHelper } from 'threeRectAreaLightHelper';
@@ -84,7 +85,7 @@ document.addEventListener("mouseup", function (event) {
     if (drag == false) {
         // if the action is add atom
         if (action == "addAtom") {
-            if (mouse.y < -0.8) {
+            if (mouse.y < -0.75) {
                 return;
             }
             var newSphere = addSphere(mouse, camera, scene);
@@ -95,6 +96,9 @@ document.addEventListener("mouseup", function (event) {
             INTERSECTED = CheckHover(mouse, camera, atomList, INTERSECTED);
             if (INTERSECTED) {
                 SelectAtomList.push(INTERSECTED);
+                // INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+                // INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+                console.log(INTERSECTED);
             }
         }
     }
@@ -106,12 +110,8 @@ addSphereButton.addEventListener("click", function () {
     console.log("adding atom mode");
     if (action != "addAtom") {
         action = "addAtom";
-        document.getElementById("AddAtom").style =
-            "background-color: rgba(0,255,255,0.75); color: #000000 ";
     } else {
         action = "";
-        document.getElementById("AddAtom").style =
-            "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
     }
 });
 
@@ -121,25 +121,32 @@ addSelectList.addEventListener("click", function () {
     console.log("selecting atom mode");
     if (action != "selectAtom") {
         action = "selectAtom";
-        document.getElementById("SelectAtom").style =
-            "background-color: rgba(0,255,255,0.75); color: #000000 ";
     } else {
         action = "";
-        document.getElementById("SelectAtom").style =
-            "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
     }
 });
 
 // respond to translate
-const translateList = document.getElementById("TranslatePattern");
-translateList.addEventListener("click", function () {
+
+const form = document.getElementById("translate");
+form.addEventListener("submit", function () {
     console.log("translating");
-    var newAtoms = TranslatePattern(SelectAtomList);
+    var vec = form.elements;
+    var translateVec = new THREE.Vector3(
+        parseInt(vec[0].value),
+        parseInt(vec[1].value),
+        parseInt(vec[2].value)
+    );
+    var newAtoms = TranslatePattern(SelectAtomList, translateVec);
+    console.log(translateVec, newAtoms);
     for (let i = 0; i < newAtoms.length; i++) {
         scene.add(newAtoms[i]);
     }
     SelectAtomList = newAtoms;
 });
+
+const translateList = document.getElementById("TranslatePattern");
+translateList.addEventListener("click", function () {});
 
 // make the window responsive
 window.addEventListener("resize", () => {
@@ -150,10 +157,7 @@ window.addEventListener("resize", () => {
 
 // render the scene and animate
 var render = function () {
-    for (let i = 0; i < SelectAtomList.length; i++) {
-        var curAtom = SelectAtomList[i];
-        console.log(curAtom.position);
-    }
+    updateButtonCSS(action);
     INTERSECTED = CheckHover(mouse, camera, atomList, INTERSECTED);
     requestAnimationFrame(render);
     controls.update();

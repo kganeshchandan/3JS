@@ -25,7 +25,14 @@
     <div id="menu">
         <button id="SelectAtom">SELECT ATOMS</button>
         <button id="AddAtom">ADD ATOM</button>
-        <button id="TranslatePattern">REPEAT PATTERN</button>
-    </div>
+        <div> --- </div>
+        <form onsubmit="return false" id = "translate">
+            <input type="text" name="x" value=1 size="1"/> 
+            <input type="text" name="y" value=1 size="1"/> 
+            <input type = "text" name="z" value=1 size="1"/> 
+            <button id="TranslatePattern" >REPEAT PATTERN</button>
+        </form>
+        
+    
 </body>
 </html>
