@@ -94,5 +94,35 @@ export function updateButtonCSS(action) {
             "background-color: rgba(0,255,255,0.75); color: #000000 ";
         document.getElementById("AddAtom").style =
             "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
+    } else {
+        document.getElementById("AddAtom").style =
+            "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
+        document.getElementById("SelectAtom").style =
+            "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
     }
 }
+function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+// export function highlightSelectList(SelectAtomList, scene) {
+//     for (let j = 0; j < scene.children; j++) {
+//         for (let i = 0; i < SelectAtomList.length; i++) {
+//             var atom = scene.children[j];
+//             var pink = 0xff44ff;
+//             var blue = 0x00ffff;
+//             if (containsObject(atom, SelectAtomList)) {
+//                 atom.material.emissive.setHex(pink);
+//                 atom.currentHex = atom.material.emissive.getHex();
+//             } else {
+//                 atom.material.emissive.setHex(blue);
+//                 atom.currentHex = atom.material.emissive.getHex();
+//             }
+//         }
+//     }
+// }

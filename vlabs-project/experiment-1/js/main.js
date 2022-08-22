@@ -7,6 +7,7 @@ import {
     DeleteObject,
     TranslatePattern,
     updateButtonCSS,
+    // highlightSelectList,
 } from "./utils.js";
 
 // import { RectAreaLightHelper } from 'threeRectAreaLightHelper';
@@ -123,6 +124,7 @@ addSelectList.addEventListener("click", function () {
         action = "selectAtom";
     } else {
         action = "";
+        SelectAtomList = [];
     }
 });
 
@@ -141,6 +143,7 @@ form.addEventListener("submit", function () {
     console.log(translateVec, newAtoms);
     for (let i = 0; i < newAtoms.length; i++) {
         scene.add(newAtoms[i]);
+        atomList.push(newAtoms[i]);
     }
     SelectAtomList = newAtoms;
 });
@@ -157,6 +160,7 @@ window.addEventListener("resize", () => {
 
 // render the scene and animate
 var render = function () {
+    // highlightSelectList(SelectAtomList, scene);
     updateButtonCSS(action);
     INTERSECTED = CheckHover(mouse, camera, atomList, INTERSECTED);
     requestAnimationFrame(render);
