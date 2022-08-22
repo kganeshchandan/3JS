@@ -9,6 +9,8 @@
     <title>Document</title>
 </head>
 <body>
+		<div id="container"></div>
+		
     <script type="importmap">
         {
             "imports": {
@@ -17,9 +19,13 @@
             }
         }
     </script>
-    <div id="WebGL-output",style="heigh:100px;"></div>
 
     <script type= "module" src="js/three.js"></script>
     <script type = "module" src="js/main.js"></script>
+    <div id="menu">
+        <button id="SelectAtom">SELECT ATOMS</button>
+        <button id="AddAtom">ADD ATOM</button>
+        <button id="TranslatePattern">REPEAT PATTERN</button>
+    </div>
 </body>
 </html>
