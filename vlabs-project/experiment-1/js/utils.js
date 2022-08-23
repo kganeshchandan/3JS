@@ -15,29 +15,33 @@ export function addSphere(mouse, camera, scene) {
         new THREE.MeshStandardMaterial({
             color: 0x00ffff,
             name: "sphere",
-            roughness: 0,
+            roughness: 5,
         })
     );
     sphereMesh.position.copy(intersectionPoint);
+    // sphereMesh.material.emissive.setHex(0xff44ff);
     return sphereMesh;
 }
 export function CheckHover(mouse, camera, atomList, INTERSECTED) {
     var raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(atomList, false);
-
+    var pink = 0xff44ff;
+    var blue = 0x00ffff;
+    var black = 0x000000;
     if (intersects.length > 0) {
         if (INTERSECTED != intersects[0].object) {
-            if (INTERSECTED)
-                INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+            if (INTERSECTED) {
+                INTERSECTED.material.emissive.setHex(black);
+            }
 
             INTERSECTED = intersects[0].object;
-            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-            INTERSECTED.material.emissive.setHex(0xff44ff);
+            INTERSECTED.currentHex = blue;
+            INTERSECTED.material.emissive.setHex(pink);
         }
+        INTERSECTED.material.emissive.setHex(pink);
     } else {
-        if (INTERSECTED)
-            INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+        if (INTERSECTED) INTERSECTED.material.emissive.setHex(black);
         INTERSECTED = null;
     }
     return INTERSECTED;
@@ -110,19 +114,20 @@ function containsObject(obj, list) {
     }
     return false;
 }
-// export function highlightSelectList(SelectAtomList, scene) {
-//     for (let j = 0; j < scene.children; j++) {
-//         for (let i = 0; i < SelectAtomList.length; i++) {
-//             var atom = scene.children[j];
-//             var pink = 0xff44ff;
-//             var blue = 0x00ffff;
-//             if (containsObject(atom, SelectAtomList)) {
-//                 atom.material.emissive.setHex(pink);
-//                 atom.currentHex = atom.material.emissive.getHex();
-//             } else {
-//                 atom.material.emissive.setHex(blue);
-//                 atom.currentHex = atom.material.emissive.getHex();
-//             }
-//         }
-//     }
-// }
+export function highlightSelectList(SelectAtomList, atomList) {
+    for (let j = 0; j < atomList.length; j++) {
+        var atom = atomList[j];
+        var pink = 0xff44ff;
+        var blue = 0x00ffff;
+        var black = 0x000000;
+        if (containsObject(atom, SelectAtomList)) {
+            var a = atom.material.emissive.getHex();
+            // atom.currentHex = blue;
+            atom.material.emissive.setHex(pink);
+        } else {
+            // var a = atom.material.emissive.getHex();
+            // atom.currentHex = blue;
+            atom.material.emissive.setHex(black);
+        }
+    }
+}

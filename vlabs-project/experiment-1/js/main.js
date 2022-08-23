@@ -7,7 +7,7 @@ import {
     DeleteObject,
     TranslatePattern,
     updateButtonCSS,
-    // highlightSelectList,
+    highlightSelectList,
 } from "./utils.js";
 
 // import { RectAreaLightHelper } from 'threeRectAreaLightHelper';
@@ -160,7 +160,8 @@ window.addEventListener("resize", () => {
 
 // render the scene and animate
 var render = function () {
-    // highlightSelectList(SelectAtomList, scene);
+    console.log(SelectAtomList.length, atomList.length);
+    highlightSelectList(SelectAtomList, atomList);
     updateButtonCSS(action);
     INTERSECTED = CheckHover(mouse, camera, atomList, INTERSECTED);
     requestAnimationFrame(render);
