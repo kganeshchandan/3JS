@@ -5,6 +5,7 @@ import {
     addSphere,
     CheckHover,
     DeleteObject,
+    RepeatPattern,
     TranslatePattern,
     updateButtonCSS,
     highlightSelectList,
@@ -128,18 +129,37 @@ addSelectList.addEventListener("click", function () {
     }
 });
 
-// respond to translate
+// respond to repeat
+const formRepeat = document.getElementById("repeat");
+formRepeat.addEventListener("submit", function () {
+    console.log("repeating");
+    var vec = formRepeat.elements;
+    var repeatVec = new THREE.Vector3(
+        parseInt(vec[0].value),
+        parseInt(vec[1].value),
+        parseInt(vec[2].value)
+    );
+    var newAtoms = RepeatPattern(SelectAtomList, repeatVec);
+    console.log(repeatVec, newAtoms);
+    for (let i = 0; i < newAtoms.length; i++) {
+        scene.add(newAtoms[i]);
+        atomList.push(newAtoms[i]);
+    }
+    SelectAtomList = newAtoms;
+});
 
-const form = document.getElementById("translate");
-form.addEventListener("submit", function () {
+// respond to translate
+const formTranslate = document.getElementById("translate");
+formTranslate.addEventListener("submit", function () {
     console.log("translating");
-    var vec = form.elements;
+    var vec = formTranslate.elements;
     var translateVec = new THREE.Vector3(
         parseInt(vec[0].value),
         parseInt(vec[1].value),
         parseInt(vec[2].value)
     );
-    var newAtoms = TranslatePattern(SelectAtomList, translateVec);
+    var count = parseInt(vec[3].value);
+    var newAtoms = TranslatePattern(SelectAtomList, translateVec, count);
     console.log(translateVec, newAtoms);
     for (let i = 0; i < newAtoms.length; i++) {
         scene.add(newAtoms[i]);
@@ -148,8 +168,8 @@ form.addEventListener("submit", function () {
     SelectAtomList = newAtoms;
 });
 
-const translateList = document.getElementById("TranslatePattern");
-translateList.addEventListener("click", function () {});
+// const translateList = document.getElementById("TranslatePattern");
+// translateList.addEventListener("click", function () {});
 
 // make the window responsive
 window.addEventListener("resize", () => {
@@ -160,7 +180,7 @@ window.addEventListener("resize", () => {
 
 // render the scene and animate
 var render = function () {
-    console.log(SelectAtomList.length, atomList.length);
+    // console.log(atomList, scene.children);
     highlightSelectList(SelectAtomList, atomList);
     updateButtonCSS(action);
     INTERSECTED = CheckHover(mouse, camera, atomList, INTERSECTED);

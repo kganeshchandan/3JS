@@ -50,6 +50,11 @@ export function CheckHover(mouse, camera, atomList, INTERSECTED) {
 export function DeleteObject(mouse, camera, scene, atomList, INTERSECTED) {
     INTERSECTED = CheckHover(mouse, camera, atomList, INTERSECTED);
     scene.remove(INTERSECTED);
+    // atomList.remove(INTERSECTED);
+    const index = atomList.indexOf(INTERSECTED);
+    if (index > -1) {
+        atomList.splice(index, 1);
+    }
 }
 
 export function AddLight() {
@@ -66,13 +71,13 @@ export function AddLight() {
     return [light, light2, light3];
 }
 
-export function TranslatePattern(SelectAtomList, translateVec) {
+export function RepeatPattern(SelectAtomList, repeatVec) {
     var newAtoms = [];
     for (let i = 0; i < SelectAtomList.length; i++) {
         var curAtom = SelectAtomList[i];
         var newpos = curAtom.position.clone();
         // var translateVec = new THREE.Vector3(1, 1, 1);
-        newpos.add(translateVec);
+        newpos.add(repeatVec);
         var sphereMesh = new THREE.Mesh(
             new THREE.SphereGeometry(1, 20, 20),
             new THREE.MeshStandardMaterial({
@@ -85,6 +90,36 @@ export function TranslatePattern(SelectAtomList, translateVec) {
         newAtoms.push(sphereMesh);
     }
     return newAtoms;
+}
+
+export function TranslatePattern(SelectAtomList, translateVec, count) {
+    var allNewAtoms = [];
+    while (--count) {
+        var newAtoms = [];
+        for (let i = 0; i < SelectAtomList.length; i++) {
+            var curAtom = SelectAtomList[i];
+            var newpos = curAtom.position.clone();
+            // var translateVec = new THREE.Vector3(1, 1, 1);
+            translateVec.multiplyScalar(count);
+            newpos.add(translateVec);
+
+            var sphereMesh = new THREE.Mesh(
+                new THREE.SphereGeometry(1, 20, 20),
+                new THREE.MeshStandardMaterial({
+                    color: 0x00ffff,
+                    name: "sphere",
+                    roughness: 0,
+                })
+            );
+            sphereMesh.position.copy(newpos);
+            newAtoms.push(sphereMesh);
+            translateVec.multiplyScalar(1 / count);
+        }
+        for (let i = 0; i < newAtoms.length; i++) {
+            allNewAtoms.push(newAtoms[i]);
+        }
+    }
+    return allNewAtoms;
 }
 
 export function updateButtonCSS(action) {
