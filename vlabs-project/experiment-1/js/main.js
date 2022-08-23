@@ -3,12 +3,15 @@ import { OrbitControls } from "threeOC";
 import {
     AddLight,
     addSphere,
+    addSphereAtCoordinate,
     CheckHover,
     DeleteObject,
     RepeatPattern,
     TranslatePattern,
     updateButtonCSS,
     highlightSelectList,
+    moveSelectList,
+    checkSCP,
 } from "./utils.js";
 
 // import { RectAreaLightHelper } from 'threeRectAreaLightHelper';
@@ -87,22 +90,23 @@ document.addEventListener("mouseup", function (event) {
     if (drag == false) {
         // if the action is add atom
         if (action == "addAtom") {
-            if (mouse.y < -0.75) {
-                return;
-            }
             var newSphere = addSphere(mouse, camera, scene);
             scene.add(newSphere);
             atomList.push(newSphere);
         }
-        if (action == "selectAtom") {
+        else if (action == "selectAtom") {
             INTERSECTED = CheckHover(mouse, camera, atomList, INTERSECTED);
             if (INTERSECTED) {
                 SelectAtomList.push(INTERSECTED);
-                // INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-                // INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-                console.log(INTERSECTED);
             }
         }
+        else if(action == "selectAll"){
+            SelectAtomList = [];
+            for (let i = 0 ; i < atomList.length; i++){
+                SelectAtomList.push(atomList[i])
+            }
+        }
+    
     }
 });
 
@@ -129,15 +133,52 @@ addSelectList.addEventListener("click", function () {
     }
 });
 
+// respond to select all atoms
+const addSelectAll = document.getElementById("SelectAll");
+addSelectAll.addEventListener("click", function () {
+    if (action != "selectAll") {
+        action = "selectAll";
+    } else {
+        action = "";
+        SelectAtomList = [];
+    }
+});
+
+// respond to check for SCP
+
+const addCheckSC = document.getElementById("CheckSC");
+addCheckSC.addEventListener("click", function () {
+    console.log("checking SCP packing");
+    var checkresult = checkSCP(SelectAtomList);
+    alert(checkresult);
+});
+
+// respond to add atom by coordinate
+
+const formAdd = document.getElementById("addatom");
+formAdd.addEventListener("submit", function () {
+    console.log("adding atom");
+    var vec = formAdd.elements;
+    var AddVec = new THREE.Vector3(
+        parseFloat(vec[0].value),
+        parseFloat(vec[1].value),
+        parseFloat(vec[2].value)
+    );
+    var addedatom = addSphereAtCoordinate(AddVec);
+    console.log(AddVec,addedatom);
+    scene.add(addedatom);
+    atomList.push(addedatom);
+});
+
 // respond to repeat
 const formRepeat = document.getElementById("repeat");
 formRepeat.addEventListener("submit", function () {
     console.log("repeating");
     var vec = formRepeat.elements;
     var repeatVec = new THREE.Vector3(
-        parseInt(vec[0].value),
-        parseInt(vec[1].value),
-        parseInt(vec[2].value)
+        parseFloat(vec[0].value),
+        parseFloat(vec[1].value),
+        parseFloat(vec[2].value)
     );
     var newAtoms = RepeatPattern(SelectAtomList, repeatVec);
     console.log(repeatVec, newAtoms);
@@ -154,11 +195,11 @@ formTranslate.addEventListener("submit", function () {
     console.log("translating");
     var vec = formTranslate.elements;
     var translateVec = new THREE.Vector3(
-        parseInt(vec[0].value),
-        parseInt(vec[1].value),
-        parseInt(vec[2].value)
+        parseFloat(vec[0].value),
+        parseFloat(vec[1].value),
+        parseFloat(vec[2].value)
     );
-    var count = parseInt(vec[3].value);
+    var count = parseFloat(vec[3].value);
     var newAtoms = TranslatePattern(SelectAtomList, translateVec, count);
     console.log(translateVec, newAtoms);
     for (let i = 0; i < newAtoms.length; i++) {
@@ -168,6 +209,19 @@ formTranslate.addEventListener("submit", function () {
     SelectAtomList = newAtoms;
 });
 
+// respond to move
+const formMove = document.getElementById("move");
+formMove.addEventListener("submit", function () {
+    console.log("moving");
+    var vec = formMove.elements;
+    var moveVector = new THREE.Vector3(
+        parseFloat(vec[0].value),
+        parseFloat(vec[1].value),
+        parseFloat(vec[2].value)
+    );
+    moveSelectList(SelectAtomList, moveVector);
+    console.log(moveVector, SelectAtomList);
+});
 // const translateList = document.getElementById("TranslatePattern");
 // translateList.addEventListener("click", function () {});
 
@@ -180,7 +234,7 @@ window.addEventListener("resize", () => {
 
 // render the scene and animate
 var render = function () {
-    // console.log(atomList, scene.children);
+    console.log(action,atomList, SelectAtomList, scene.children);
     highlightSelectList(SelectAtomList, atomList);
     updateButtonCSS(action);
     INTERSECTED = CheckHover(mouse, camera, atomList, INTERSECTED);
