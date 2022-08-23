@@ -25,11 +25,20 @@
     <div id="menu">
         <button id="SelectAtom">SELECT ATOMS</button>
         <button id="AddAtom">ADD ATOM</button>
+        <button id="SelectAll">SELECT ALL ATOMS</button>
+        <button id="CheckSC">CHECK FOR SIMPLE CUBIC PACKING</button>
+        <div> --- </div>
+        <form onsubmit="return false" id = "addatom">
+            <input type="text" name="x" value=1 size="1"/> 
+            <input type="text" name="y" value=1 size="1"/> 
+            <input type="text" name="z" value=1 size="1"/> 
+            <button id="AddAtomByCoordinate" >ADD ATOM AT A COORDINATE</button>
+        </form>
         <div> --- </div>
         <form onsubmit="return false" id = "repeat">
             <input type="text" name="x" value=1 size="1"/> 
             <input type="text" name="y" value=1 size="1"/> 
-            <input type = "text" name="z" value=1 size="1"/> 
+            <input type="text" name="z" value=1 size="1"/> 
             <button id="RepeatSelectedPattern" >REPEAT SELECTED PATTERN ONCE</button>
         </form>
         <div> --- </div>
@@ -39,6 +48,13 @@
             <input type="text" name="z" value=1 size="1"/>
             <input type="text" name="c" value=10 size="1"/>  
             <button id="TranslatePattern" >TRANSLATE PATTERN</button>
+        </form>
+        <div> --- </div>
+        <form onsubmit="return false" id = "move">
+            <input type="text" name="x" value=1 size="1"/>
+            <input type="text" name="y" value=1 size="1"/>
+            <input type="text" name="z" value=1 size="1"/>
+            <button id="MoveSelectedPattern">MOVE SELECTED PATTERN</button>
         </form>
         
     

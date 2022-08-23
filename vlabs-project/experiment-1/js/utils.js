@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { TextureLoader } from "three";
 import { OrbitControls } from "threeOC";
 
 export function addSphere(mouse, camera, scene) {
@@ -22,6 +23,20 @@ export function addSphere(mouse, camera, scene) {
     // sphereMesh.material.emissive.setHex(0xff44ff);
     return sphereMesh;
 }
+
+export function addSphereAtCoordinate(AddVec) {
+    const sphereMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 20, 20),
+        new THREE.MeshStandardMaterial({
+            color: 0x00ffff,
+            name: "sphere",
+            roughness: 5,
+        })
+    );
+    sphereMesh.position.copy(AddVec);
+    return sphereMesh;
+}
+
 export function CheckHover(mouse, camera, atomList, INTERSECTED) {
     var raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, camera);
@@ -128,12 +143,14 @@ export function updateButtonCSS(action) {
             "background-color: rgba(0,255,255,0.75); color: #000000 ";
         document.getElementById("SelectAtom").style =
             "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
+        
     } else if (action == "selectAtom") {
         document.getElementById("SelectAtom").style =
             "background-color: rgba(0,255,255,0.75); color: #000000 ";
         document.getElementById("AddAtom").style =
             "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
-    } else {
+        
+    }else {
         document.getElementById("AddAtom").style =
             "color: rgba(127,255,255,0.75);background: transparent; outline: 1px solid rgba(127,255,255,0.75);border: 0px;padding: 5px 10px;cursor: pointer;";
         document.getElementById("SelectAtom").style =
@@ -165,4 +182,26 @@ export function highlightSelectList(SelectAtomList, atomList) {
             atom.material.emissive.setHex(black);
         }
     }
+}
+
+export function moveSelectList(SelectAtomList, moveVector) {
+    for (let i=0; i<SelectAtomList.length; i++){
+        var currpos = SelectAtomList[i].position.clone();
+        //if(i==0) console.log(currpos.y);
+        currpos.add(moveVector);
+        //if(i==0) console.log(currpos.y);
+        SelectAtomList[i].position.copy(currpos);
+    }
+}
+
+export function checkSCP(SelectAtomList) {
+    if(SelectAtomList.length != 8) return false; 
+    for(let i=0;i<SelectAtomList.length-1;i++) {
+        for(let j = i + 1;j<SelectAtomList.length;j++) {
+            var dist = SelectAtomList[i].position.distanceToSquared(SelectAtomList[j].position);
+            if(dist == 4 || dist == 8 || dist == 12) continue;
+            else return false;
+        }
+    }
+    return true;
 }
